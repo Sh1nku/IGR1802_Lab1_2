@@ -1,0 +1,3 @@
+A) android:icon is taken from app/res/ and chooses based on device which of the icons in the folder to use
+B) There is 1 activity, which is MainActivity
+C) Minimum SDK version is not currently set in the manifest file, but is set in build.gradle for android studio to be version 15. As it is not set in manifest, the one in build.gradle is used.

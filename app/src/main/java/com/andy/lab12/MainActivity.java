@@ -1,9 +1,11 @@
 package com.andy.lab12;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,8 +15,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String DATETIME_FORMAT = "dd.MM.yyyy HH:mm";
     SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATETIME_FORMAT);
+    SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
     Calendar calendarNow;
     String fromDateText;
     TextView calculatingText;
@@ -36,8 +40,33 @@ public class MainActivity extends AppCompatActivity {
         calculatingText.setText(getString(R.string.calculatingTextStr) + " " + fromDateText);
         timeDifference = findViewById(R.id.result);
         dateEdit = findViewById(R.id.dateEdit);
+
+        final DatePickerDialog.OnDateSetListener datePicker = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                calendarNow.set(Calendar.YEAR, year);
+                calendarNow.set(Calendar.MONTH, monthOfYear);
+                calendarNow.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateDateEdit();
+            }
+        };
+
+        dateEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(MainActivity.this, datePicker, calendarNow
+                        .get(Calendar.YEAR), calendarNow.get(Calendar.MONTH),
+                        calendarNow.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
     }
 
+    void updateDateEdit() {
+        dateEdit.setText(dateFormat.format(calendarNow.getTime()));
+    }
+
+    //Calculates and displays the time difference
     public void calculateTimeDifference(View view) {
         try {
             Date fromDate = dateTimeFormat.parse(fromDateText);
